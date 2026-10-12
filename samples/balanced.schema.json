@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Balanced configuration",
+  "description": "Balanced ConfigView sample configuration.",
+  "properties": {
+    "modernization": {
+      "type": "object",
+      "title": "Modernization",
+      "description": "Controls modernization strategy and execution parameters.",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "title": "Mode",
+          "description": "Modernization strategy used by this configuration.",
+          "enum": [
+            "balanced",
+            "simple",
+            "optimal",
+            "full",
+            "controlled"
+          ]
+        },
+        "confidence_threshold": {
+          "type": "number",
+          "title": "Confidence threshold",
+          "description": "Minimum confidence required for modernization recommendations.",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "description": "Enables or disables modernization processing."
+        },
+        "max_iterations": {
+          "type": "integer",
+          "title": "Max iterations",
+          "description": "Maximum number of modernization analysis or refinement iterations.",
+          "minimum": 1
+        },
+        "tags": {
+          "type": "array",
+          "title": "Tags",
+          "description": "Labels used to categorize this modernization configuration.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string",
+          "title": "Notes",
+          "description": "Long-form modernization notes.",
+          "x-ui": {
+            "widget": "textarea",
+            "rows": 5,
+            "placeholder": "Write notes here..."
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "title": "Validation",
+      "description": "Controls validation behavior.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "description": "Enables validation checks."
+        },
+        "strict_mode": {
+          "type": "boolean",
+          "title": "Strict mode",
+          "description": "Treats unsupported or inconsistent configuration as blocking rather than advisory."
+        }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "title": "Reporting",
+      "description": "Controls report generation and output.",
+      "properties": {
+        "format": {
+          "type": "string",
+          "title": "Format",
+          "description": "Output format used for generated reports.",
+          "enum": [
+            "markdown",
+            "json",
+            "html"
+          ]
+        },
+        "include_charts": {
+          "type": "boolean",
+          "title": "Include charts",
+          "description": "Includes supported charts and visual summaries in generated reports."
+        },
+        "output_dir": {
+          "type": "string",
+          "title": "Output directory",
+          "description": "Directory where generated reports are written."
+        }
+      }
+    }
+  }
+}

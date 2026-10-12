@@ -1,0 +1,17 @@
+'use strict';
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
+const {parseSource}=require('../src/parser');const {updateScalar}=require('../src/edit');
+const sample='# Test of full YAML syntax\ndefaults: &defaults\n  retries: 3\nsettings:\n  retries: 2\n  nested:\n    - name: first\n  description: |\n    Line one\n    Line two\ncopied: "*defaults"\n';
+test('advanced YAML structures parse',()=>{const p=parseSource(sample,'yaml');assert.equal(p.data.settings.nested[0].name,'first');assert.equal(p.data.settings.description,'Line one\nLine two\n');assert.equal(p.data.copied,'*defaults');});
+test('edit scalar preserves YAML comments and anchors',()=>{const next=updateScalar(sample,'yaml',['settings','retries'],7);assert.match(next,/# Test of full YAML syntax/);assert.match(next,/&defaults/);assert.match(next,/\*defaults/);assert.equal(parseSource(next,'yaml').data.settings.retries,7);});
+test('duplicate keys rejected',()=>assert.throws(()=>parseSource('a: 1\na: 2\n','yaml')));
+test('invalid YAML rejected',()=>assert.throws(()=>parseSource('a: [1, 2\n','yaml')));
+test('multi document parsing',()=>assert.equal(parseSource('---\na: 1\n---\nb: 2\n','yaml').documents,2));
+test('JSON editing',()=>assert.equal(JSON.parse(updateScalar('{"a":true}','json',['a'],false)).a,false));
+const {removeArrayItem}=require('../src/edit');
+test('remove YAML list item',()=>{const next=removeArrayItem('tags:\n  - one\n  - two\n','yaml',['tags','0']);assert.deepEqual(parseSource(next,'yaml').data.tags,['two']);});
+test('remove JSON list object',()=>{const next=removeArrayItem('{"items":[{"name":"a"},{"name":"b"}]}','json',['items','1']);assert.equal(JSON.parse(next).items.length,1);});
+const {addArrayItem}=require('../src/edit');
+test('add YAML primitive list item',()=>{const next=addArrayItem('tags:\n- one\n','yaml',['tags'],'two');assert.deepEqual(parseSource(next,'yaml').data.tags,['one','two']);});
+test('add JSON primitive list item and newline is real',()=>{const next=addArrayItem('{"items":["a"]}','json',['items'],'b');assert.deepEqual(JSON.parse(next).items,['a','b']);assert.ok(next.endsWith('\n'));assert.ok(!next.endsWith('\\n'));});
+test('remove JSON list item ends with real newline',()=>{const next=removeArrayItem('{"items":["a","b"]}','json',['items','0']);assert.deepEqual(JSON.parse(next).items,['b']);assert.ok(next.endsWith('\n'));assert.ok(!next.endsWith('\\n'));});

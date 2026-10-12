@@ -1,0 +1,84 @@
+{
+  "name": "jsonconfigviewer",
+  "displayName": "JSONConfigViewer",
+  "description": "Visual YAML and JSON configuration editor with schema-aware forms, inline lists, and multiline fields",
+  "version": "0.8.0",
+  "publisher": "WaldekP",
+  "license": "Apache-2.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onCustomEditor:configview.editor",
+    "onCommand:configview.openSample"
+  ],
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "configview.editor",
+        "displayName": "JSONConfigViewer (Tree + Form)",
+        "selector": [
+          {
+            "filenamePattern": "*.yaml"
+          },
+          {
+            "filenamePattern": "*.yml"
+          },
+          {
+            "filenamePattern": "*.json"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "configview.openSample",
+        "title": "JSONConfigViewer: Open Sample YAML"
+      }
+    ],
+    "configuration": {
+      "title": "JSONConfigViewer",
+      "properties": {
+        "configview.schemaFile": {
+          "type": "string",
+          "default": "",
+          "description": "Optional JSON Schema path relative to the edited file. When empty, JSONConfigViewer auto-detects <name>.schema.json, <file>.schema.json, or $schema."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "package": "npx @vscode/vsce package --allow-missing-repository"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "keywords": [
+    "yaml",
+    "json",
+    "json schema",
+    "configuration",
+    "visual editor",
+    "form editor",
+    "tree editor",
+    "multiline"
+  ],
+  "pricing": "Free",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wallypi/JSONConfigViewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wallypi/JSONConfigViewer/issues"
+  },
+  "homepage": "https://github.com/wallypi/JSONConfigViewer#readme"
+}

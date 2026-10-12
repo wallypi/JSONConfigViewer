@@ -1,0 +1,15 @@
+modernization:
+  mode: balanced
+  confidence_threshold: 0.75
+  enabled: true
+  max_iterations: 5
+  tags:
+    - analysis
+    - optimization
+validation:
+  enabled: true
+  strict_mode: false
+reporting:
+  format: markdown
+  include_charts: true
+  output_dir: reports
